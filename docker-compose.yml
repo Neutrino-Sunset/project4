@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo
+    volumes:
+      - data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  backend:
+    build: ./backend
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./backend:/backend
+      - /backend/node_modules
+    ports:
+      - 3000:3000
+    command: [ "npm", "start"]
+    depends_on: 
+      - mongodb
+
+volumes:
+  data:
