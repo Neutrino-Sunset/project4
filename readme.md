@@ -14,14 +14,14 @@ Add docker-compose.yml to solution directory.
 
 Add docker-compose definition:
 
-   database:
-      image: mongo
-      volumes:
-         - data:/data/db
-      environment:
-         MONGO_INITDB_ROOT_USERNAME: user
-         MONGO_INITDB_ROOT_PASSWORD: password
-
+    database:
+       image: mongo
+       volumes:
+          - data:/data/db
+       environment:
+          MONGO_INITDB_ROOT_USERNAME: user
+          MONGO_INITDB_ROOT_PASSWORD: password
+ 
 Run `docker-compose up` to test.
 
 ## Express Backend
@@ -30,26 +30,26 @@ Create backend project directory.
 
 Create Dockerfile:
 
-   FROM node:lts-alpine
+    FROM node:lts-alpine
 
 Add docker-compose definition:
 
-   backend:
-      build: ./backend
-      user: node
-      tty: true
-      stdin_open: true
-      volumes:
-         - ./backend:/backend
-         - /backend/node_modules
-
+    backend:
+       build: ./backend
+       user: node
+       tty: true
+       stdin_open: true
+       volumes:
+          - ./backend:/backend
+          - /backend/node_modules
+ 
 Create ./backend/.devcontainer.json
 
-   {
-      "dockerComposeFile": "../docker-compose.yml",
-      "service": "backend",
-      "workspaceFolder": "/backend"
-   }
+    {
+       "dockerComposeFile": "../docker-compose.yml",
+       "service": "backend",
+       "workspaceFolder": "/backend"
+    }
 
 From the WSL terminal open backend in VsCode `code ./backend/`
 
@@ -59,17 +59,17 @@ Install express `npm i express`
 
 Create server.js add HelloWorld implementation
 
-   const express = require('express')
-   const app = express()
-   const port = 3000
-
-   app.get('/', (req, res) => {
-   res.send('Hello World!')
-   })
-
-   app.listen(port, () => {
-   console.log(`Example app listening at http://localhost:${port}`)
-   })
+    const express = require('express')
+    const app = express()
+    const port = 3000
+ 
+    app.get('/', (req, res) => {
+    res.send('Hello World!')
+    })
+ 
+    app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+    })
 
 (Optional) Add npm start script `"start": "node server.js"`
 
@@ -97,9 +97,9 @@ Start using `docker-compose up` and verify server can be reached.
 
 Add npm install process to Dockerfile.
 
-   COPY ["package.json", "package-lock.json", "./"]
-   RUN npm install
-   COPY . .
+    COPY ["package.json", "package-lock.json", "./"]
+    RUN npm install
+    COPY . .
 
 ## Connect backend to MongoDb
 
@@ -109,22 +109,22 @@ In backend/server.js, add `const mongoose = require('mongoose');`
 
 In backend/server.js replace `app.listen(port, () => {` with 
 
-   mongoose.connect(
-      `mongodb://user:password@mongodb:27017/my-temp-db?authSource=admin`,
-      {
-         useNewUrlParser: true,
-         useUnifiedTopology: true,
-      },
-      (err) => {
-         if (err) {
-            console.error('FAILED TO CONNECT TO MONGODB');
-            console.error(err);
-         } else {
-            console.log('CONNECTED TO MONGODB!!');
-            app.listen(port);
-         }
-      }
-   );
+    mongoose.connect(
+       `mongodb://user:password@mongodb:27017/my-temp-db?authSource=admin`,
+       {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+       },
+       (err) => {
+          if (err) {
+             console.error('FAILED TO CONNECT TO MONGODB');
+             console.error(err);
+          } else {
+             console.log('CONNECTED TO MONGODB!!');
+             app.listen(port);
+          }
+       }
+    );
 
 In docker-compose.yml backend service definition add:
 
@@ -139,7 +139,7 @@ node images come with a non-root user named 'node' id=1000. If this id matches t
 
 dotnet images do not come with a default non-root user. One can be created by adding the following directive to the Dockerfile, where the '1000' should match the id of the user on the host system.
 
-   RUN useradd -ms /bin/bash -u 1000 dotnet`
+    RUN useradd -ms /bin/bash -u 1000 dotnet`
 
 ## Useful commands
 
